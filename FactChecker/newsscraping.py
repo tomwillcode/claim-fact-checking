@@ -1,48 +1,54 @@
-import sys
-from pandas import DataFrame
+import pandas as pd
+import numpy as np
+from requests_html import HTMLSession
+import time
+from googlesearch import search_news
 from googlesearch import search
 from newsplease import NewsPlease
 
-class NewsScraper:
-    def __init__(self):
-        self.google_search_query = (
-            'site:nytimes.com OR '
-            'site:bbc.com OR '
-            'site:cnn.com OR '
-            'site:washingtonpost.com '
-            '{query}')
-            
-    def get_relevant_urls(self, query, num_results, tbs):
-        gsq = self.google_search_query.format(query=query)
-        
-        urls = []
-        try:        
-            for url in search(gsq, stop=num_results, tbs=tbs):
-                urls.append(url)
-        except:
-            print('The quota of Google Search API met its limit. See you 1 - 2 hours later! Goodbye!')
-            sys.exit(0)
-        
-        return urls
-    
-    def __call__(self, query, num_results=20, tbs='qdr:y'):
-        urls = self.get_relevant_urls(query, num_results, tbs)
-        
-        context = {
-            'url': [], 'title': [],
-            'description': [], 'maintext': [], 'date_publish': []}
-            
-        
-        context['url'] = urls
-        for i in range(len(urls)):
-            article = NewsPlease.from_url(urls[i])
-            try:
-                context['title'].append(article.title)
-                context['description'].append(article.description)
-                context['maintext'].append(article.maintext)
-                context['date_publish'].append(article.date_publish)
-            except:
-                for key in ['title', 'description', 'maintext', 'date_publish']:
-                    context[key].append('')
-                    
-        return DataFrame(context)
+#from nltk.tokenize import sent_tokenize
+#import nltk
+#nltk.download('punkt')
+
+
+def parse_elements(url):
+    session = HTMLSession()
+    text = ''
+    try:
+      r = session.get(url)
+      for element in ('h1', 'p', 'span', 'li'):
+        try:
+            elements = r.html.find(element)
+            elements = ' '.join([element.text for element in elements])
+            text = text + ' ' + elements
+        except Exception:
+            continue
+      #elements = list(map(lambda x: x.text, elements))
+      return text
+    except Exception:
+      try:
+          article = NewsPlease.from_url(url)
+          title = article.title
+          description = article.description
+          main_text = article.maintext
+          text = text + title + ' ' + description + ' ' + main_text
+          return text
+      except Exception:
+        return np.nan
+
+
+
+
+def news_scraper(query):
+    news_result = search_news(query=query, num=5, stop=5)
+    result = search(query=query, num=5, stop=5)
+    news_result = list(news_result)
+    result = list(result)
+    while len(news_result) < len(result):
+        news_result.append(np.nan)
+    while len(result) < len(news_result):
+        result.append(np.nan)
+    results_df = pd.DataFrame({'results': result, 'news_results': news_result})
+    results_df['articles'] = results_df['results'].apply(lambda x: parse_elements(x))
+    results_df['news_articles'] = results_df['news_results'].apply(lambda x: parse_elements(x))
+    return(results_df)

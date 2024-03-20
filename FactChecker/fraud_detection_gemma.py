@@ -3,7 +3,7 @@ from huggingface_hub import login
 from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
 
 class GemmaFraudDetector:
-    def __init__(self, hf_token="REPLACEWITHYOURHFTOKEN", temperature=1, top_p=1):
+    def __init__(self, hf_token="", temperature=1, top_p=1):
         login(hf_token)
         self.prompt = (
             'Based only on the context:\n'

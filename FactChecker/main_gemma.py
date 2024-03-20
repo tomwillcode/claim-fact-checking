@@ -1,7 +1,8 @@
 from tabulate import tabulate
-from newsscraping import NewsScraper
+from newsscraping import news_scraper
 from fraud_detection_gemma import GemmaFraudDetector
 from similarity import RelevantContextRetriever, RelevantContextRetriever2
+from similarities2 import sorted_df
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -9,7 +10,7 @@ warnings.filterwarnings('ignore')
 if __name__ == "__main__":
     print("\n\nI am a Fact Checking Robot.")
     
-    news_scraper = NewsScraper()   
+    #news_scraper = NewsScraper()
     fraud_detector = GemmaFraudDetector()
     relevant_context_retriever = RelevantContextRetriever()
     relevant_context_retriever2 = RelevantContextRetriever2()
@@ -24,20 +25,24 @@ if __name__ == "__main__":
         context_df = news_scraper(query)
         print('Done news scraping.')
         print('Building relevant prompt...')
-        relevant_context_df = relevant_context_retriever2(query, context_df)
-        relevant_context_df = relevant_context_retriever(query, relevant_context_df)
+        #relevant_context_df = relevant_context_retriever2(query, context_df)
+        #relevant_context_df = relevant_context_retriever(query, relevant_context_df)
+        relevant_context_df = sorted_df(context_df,query)
         print('Built relevant prompt.')
         
         print('Show relevant content:')
+        print(tabulate(context_df, headers='keys', tablefmt='psql'))
         print(tabulate(relevant_context_df, headers='keys', tablefmt='psql'))
+        '''
         context = []
         for i in range(relevant_context_df.shape[0]):
             title = relevant_context_df.at[i, 'title']
             sen = relevant_context_df.at[i, 'sentence']
             context.append(f'source: {title}\n{sen}')
-        
-        context = '\n'.join(context)
-        
+        '''
+
+        #context = '\n'.join(context)
+        context = ' '.join(list(relevant_context_df['sentences'].head(5)))
         response = fraud_detector(query, context)
         print(response)
         print('\n')
