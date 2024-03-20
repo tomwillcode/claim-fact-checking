@@ -29,13 +29,14 @@ you will definitely want to use the best GPU you can through colab if you are us
 1. replace with your valid huggingface access token in `fraud_detection_gemma.py`
 2. run `python main_gemma.py`
 ## Architecture
-![image](https://github.com/yatshunlee/claim-fact-checking/assets/69416199/a530c314-702e-4729-be1a-3159da2e98e1)
+
 1. Retrieve a statement / query that the user wants to fact-check.
-2. Make it a better google search query: sites, keywords, time range.
-3. Perform webscrapping to get relevant news content about the query: Google Search, NewsPlease.
-4. Utilize text entailment to keep top relevent news by their titles. Then conduct sentence embedding and KNN to get the most relevant sentences in the news.
-5. Design the prompt by retrieval augmented generation (RAG).
-6. Fit into the GPT 3.5 model to generate a response.
+2. Retrieve up to 10 regular results, and 10 news results with the Google Search API.
+3. Perform webscrapping to get relevant content from the results using NewsPlease and requests-html.
+4. Find the top 5 sentences that are most similar to the original query (on topic) based on cosine-similarity.
+5. Design the prompt by retrieval augmented generation (RAG) based on the top 5 sentences as context.
+6. Feed the context and query to LLM.
+7. LLM determines if the claim is fraud or not.
 ## Fact Checker
 ### Check statement: Joe Biden told people not to vote
 ![image](https://github.com/yatshunlee/claim-fact-checking/assets/69416199/87ceed02-dafc-4d07-bec7-bb404efc0a3d)
