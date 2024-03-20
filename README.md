@@ -17,7 +17,7 @@ conda activate claim-fact-check
 !pip install nltk
 !pip install requests-html
 ```
-One way to go is to upload the .py files you will need into the folder for the colab you are using as seen in the picture below, but you can also pull this github repository to your google drive as a new folder in your google drive and you can change the colabs working directory to that folder.
+One way to go is to upload the .py files you will need into the folder for the colab you are using as seen in the picture below, but you can also pull this github repository to your google drive as a new folder in your google drive and you can change the colabs working directory to the FactChecker folder.
 ![image](https://github.com/yatshunlee/claim-fact-checking/assets/69416199/abe63700-cc9a-40cc-b7cb-9e10c39f8ccb)
 
 you will definitely want to use the best GPU you can through colab if you are using Gemma-2b locally. At least some GPU resources are available for free. Be sure to adjust the run-time as needed. 
