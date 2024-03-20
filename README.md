@@ -14,6 +14,8 @@ conda activate claim-fact-check
 !pip install -q news-please
 !pip install -q google
 !pip install -U -q sentence-transformers
+!pip install nltk
+!pip install requests-html
 ```
 ![image](https://github.com/yatshunlee/claim-fact-checking/assets/69416199/abe63700-cc9a-40cc-b7cb-9e10c39f8ccb)
 ## Usage with OpenAI GPT 3.5
