@@ -19,7 +19,7 @@ class GemmaFraudDetector:
             device_map="auto", 
             torch_dtype=torch.bfloat16)
         
-    def __call__(self, query, context, max_length=500):
+    def __call__(self, query, context, max_length=650):
         input_text = self.prompt.format(query=query, context=context)
         input_ids = self.tokenizer(
             input_text, 
