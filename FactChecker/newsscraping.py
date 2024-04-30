@@ -16,7 +16,7 @@ def parse_elements(url):
     text = ''
     try:
       r = session.get(url)
-      for element in ('h1', 'p', 'span', 'li'):
+      for element in ('h1', 'p'):
         try:
             elements = r.html.find(element)
             elements = ' '.join([element.text for element in elements])
