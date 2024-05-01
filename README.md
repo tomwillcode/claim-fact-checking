@@ -3,7 +3,7 @@ A cli, python based application to fact check a statement by comparing to releva
 ## Installation
 ### Local Environment with Conda
 ```
-git clone https://github.com/yatshunlee/claim-fact-checking.git
+git clone https://github.com/tomwillcode/claim-fact-checking.git
 conda env create -f env/environment.yml
 conda activate claim-fact-check
 ```
